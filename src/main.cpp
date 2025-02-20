@@ -160,7 +160,7 @@ void drawAutomaton(Automaton *M, sf::RenderWindow *window)
         {   
 
             
-            drawArrow(window, sf::Vector2f(src->sPosition.x + 100.0f, src->sPosition.y + 100.0f + (numberOfTransitions[*src]-1)*30.0), sf::Vector2f(dst->sPosition.x + 100.0f, dst->sPosition.y + 100.0f+ (numberOfTransitions[*src]-1)*30.0),(numberOfTransitions[*src]-1)*150.0 ,t->tLabel);
+            drawArrow(window, sf::Vector2f(src->sPosition.x + 100.0f, src->sPosition.y + 100.0f + (numberOfTransitions[*src]-1)*30.0), sf::Vector2f(dst->sPosition.x + 100.0f, dst->sPosition.y + 100.0f+ (numberOfTransitions[*src]-1)*30.0),(numberOfTransitions[*src]-1)*200.0 ,(numberOfTransitions[*src]-1)*200.0 ,t->tLabel);
 
 
         }

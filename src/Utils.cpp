@@ -1,7 +1,7 @@
 #include "headers/Utils.hpp"
 sf::Font *defaultFont = nullptr; // Define it here
 
-void drawArrow(sf::RenderWindow *window, const sf::Vector2f &start, const sf::Vector2f &end, float passThroughOffset, char label)
+void drawArrow(sf::RenderWindow *window, const sf::Vector2f &start, const sf::Vector2f &end, float passThroughOffsetx,float passThroughOffsety, char label)
 {
     // Calculate the direction and length of the arrow
     sf::Vector2f direction = end - start;
@@ -12,7 +12,7 @@ void drawArrow(sf::RenderWindow *window, const sf::Vector2f &start, const sf::Ve
     sf::Vector2f midpoint = (start + end) / 2.0f;
 
     // Calculate the pass-through point by adding the vertical offset
-    sf::Vector2f passThrough = midpoint + sf::Vector2f(0, passThroughOffset);
+    sf::Vector2f passThrough = midpoint + sf::Vector2f(passThroughOffsetx, passThroughOffsety);
 
     // Draw the first shaft segment (from start to passThrough)
     sf::Vector2f direction1 = passThrough - start;

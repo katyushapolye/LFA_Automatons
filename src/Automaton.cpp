@@ -16,7 +16,7 @@ void Automaton::printAutomaton(){
 
 void Automaton::setLayout(Automaton::LAYOUT layout){
     unsigned int c = 0;
-    unsigned int MaxLenght = 4;
+    unsigned int MaxLenght = 1;
     switch (layout)
     {
     case LAYOUT::Matrix:
