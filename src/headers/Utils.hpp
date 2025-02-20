@@ -4,5 +4,5 @@
 #define UTILS_H
 extern sf::Font* defaultFont;
 
-void drawArrow(sf::RenderWindow* window, const sf::Vector2f& start, const sf::Vector2f& end,char label = ' ');
+void drawArrow(sf::RenderWindow* window, const sf::Vector2f& start, const sf::Vector2f& end, float passThroughOffset = 0.0f, char label = ' ');
 #endif

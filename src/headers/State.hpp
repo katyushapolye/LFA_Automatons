@@ -28,6 +28,9 @@ class State{
     //renderer
     
     public:
+    bool operator<(const State& other) const {
+        return sUID < other.sUID;  // Compare based on sUID, or whatever makes sense for your application
+    }
     sf::Vector2f sPosition;
     sf::CircleShape sShape;
     sf::Text sNameText;
