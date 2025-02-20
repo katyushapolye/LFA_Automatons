@@ -24,6 +24,7 @@ int main()
     State s3 = State(2, "Q3", false, false);
     Transition t1 = Transition(0, 1, 'a');
     Transition t2 = Transition(1, 2, 'b');
+    Transition t3 = Transition(1,1, 'a');
 
     std::vector<State> states;
     states.push_back(s1);
@@ -33,6 +34,7 @@ int main()
     std::vector<Transition> transitions;
     transitions.push_back(t1);
     transitions.push_back(t2);
+    transitions.push_back(t3);
     Automaton M = Automaton(states, transitions);
 
     M.printAutomaton();
@@ -118,7 +120,29 @@ void drawAutomaton(Automaton *M, sf::RenderWindow *window)
             exit(-1);
         }
 
+        if(src == dst){
+            //trick
+            sf::CircleShape circle = sf::CircleShape(80,32);
+            circle.setOutlineThickness(3.0f);
+            circle.setOutlineColor(sf::Color::Black);
+            circle.setFillColor(sf::Color::Transparent);
+
+            circle.setPosition(src->sPosition.x+50,src->sPosition.y-40);
+
+
+            window->draw(circle);
+
+            sf::Text text((char)t->tLabel, *defaultFont, 24);
+            text.setFillColor(sf::Color::Black);
+            text.setPosition(src->sPosition.x + 150,src->sPosition.y - 70);
+            window->draw(text);
+
+
+        }
+        else{
         drawArrow(window,sf::Vector2f(src->sPosition.x+100.0f,src->sPosition.y+100.0f),sf::Vector2f(dst->sPosition.x+100.0f,dst->sPosition.y+100.0f),t->tLabel);
+        }
+        
     }
     for (auto s = M->aStates.begin(); s != M->aStates.end(); s++)
     {
