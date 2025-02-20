@@ -6,13 +6,22 @@
 #include "Transition.hpp"
 class Automaton{
 
-    private:
-    std::vector<State> aStates;
-    std::vector<Transition> aTransitions;
+
+
+
 
     public:
+    enum LAYOUT{
+        Matrix,
+        ZigZag,
+    };
+
     void printAutomaton();
+    void setLayout(LAYOUT layout);
     Automaton(std::vector<State> aStates, std::vector<Transition> aTransitions);
+
+    std::vector<State> aStates;
+    std::vector<Transition> aTransitions;
 
     
 

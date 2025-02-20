@@ -1,14 +1,17 @@
 #ifndef STATE_H
 #define STATE_H
 #include <iostream>
+#include <SFML/Graphics.hpp>
+#include "Utils.hpp"
 class State{
 
-    private:
+    
+
+    public:
     unsigned int sUID;
     bool sIsFinal = 0;
     bool sIsInitial = 0;
 
-    public:
     std::string sName;
     //string as a name
     void printState();
@@ -24,7 +27,10 @@ class State{
     //size
     //renderer
     
-    private:
+    public:
+    sf::Vector2f sPosition;
+    sf::CircleShape sShape;
+    sf::Text sNameText;
 
 };
 #endif

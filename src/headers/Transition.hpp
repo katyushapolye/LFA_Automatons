@@ -2,12 +2,13 @@
 #define TRANSITION_H
 #include <iostream>
 class Transition{
-    unsigned int tSourceUID;
-    unsigned int tTargetUID;
-    unsigned char tLabel;
+
 
 
     public:
+    unsigned int tSourceUID;
+    unsigned int tTargetUID;
+    unsigned char tLabel;
     Transition();
     Transition(unsigned int tSourceUID,unsigned int tTargetUID,unsigned char tLabel);
 
