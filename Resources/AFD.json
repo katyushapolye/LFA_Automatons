@@ -1,0 +1,14 @@
+{
+  "AFD": {
+    "simbolos": ["a", "b"],
+    "estados": ["q0", "q1", "q2"],
+    "estadosFinais": ["q2"],
+    "funcaoPrograma": [
+      { "origem": "q0", "destino": "q1", "simbolo": "b" },
+      { "origem": "q1", "destino": "q2", "simbolo": "a" },
+      { "origem": "q2", "destino": "q2", "simbolo": "a" },
+      { "origem": "q2", "destino": "q0", "simbolo": "b" }
+    ],
+    "estadoInicial": "q0"
+  }
+}

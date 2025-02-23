@@ -2,8 +2,13 @@
 #include "headers/Automaton.hpp"
 #include "headers/Utils.hpp"
 #include <map>
+#include "pugixml.hpp"
+#include <nlohmann/json.hpp>
+#include <fstream>
 void drawAutomaton(Automaton *M, sf::RenderWindow *window);
 void handleInput(sf::RenderWindow *window);
+Automaton readAutomatonFromXML(const std::string& filename);
+Automaton readAutomatonFromJSON(const std::string& filename);
 bool isDragging = false;
 sf::Vector2i lastMousePos;
 sf::View view;
@@ -12,7 +17,7 @@ float zoomLevel = 1.0f;
 int main()
 {
 
-    // init font
+
 
     defaultFont = new sf::Font();
     if (!defaultFont->loadFromFile("Resources/JetBrainsMono-Medium.ttf"))
@@ -20,30 +25,37 @@ int main()
         std::cout << "ERROR LOADING FONT!" << std::endl;
     }
 
-    State s1 = State(0, "Q1", false, true);
-    State s2 = State(1, "Q2", true, false);
-    State s3 = State(2, "Q3", false, false);
-    Transition t1 = Transition(0, 1, 'a');
-    Transition t2 = Transition(1, 2, 'b');
-    Transition t3 = Transition(1, 1, 'a');
+    // State s1 = State(0, "Q1", false, true);
+    // State s2 = State(1, "Q2", true, false);
+    // State s3 = State(2, "Q3", false, false);
+    // Transition t1 = Transition(0, 1, 'a');
+    // Transition t2 = Transition(1, 2, 'b');
+    // Transition t3 = Transition(1, 1, 'a');
 
-    Transition t4 = Transition(0, 2, 'b');
+    // Transition t4 = Transition(0, 2, 'b');
 
-    std::vector<State> states;
-    states.push_back(s1);
-    states.push_back(s2);
-    states.push_back(s3);
+    // std::vector<State> states;
+    // states.push_back(s1);
+    // states.push_back(s2);
+    // states.push_back(s3);
 
-    std::vector<Transition> transitions;
-    transitions.push_back(t1);
-    transitions.push_back(t2);
-    transitions.push_back(t3);
-    transitions.push_back(t4);
-    Automaton M = Automaton(states, transitions);
+    // std::vector<Transition> transitions;
+    // transitions.push_back(t1);
+    // transitions.push_back(t2);
+    // transitions.push_back(t3);
+    // transitions.push_back(t4);
+    // Automaton M = Automaton(states, transitions);
+
+
+
+    //Automaton M = readAutomatonFromXML("Resources/AFD.XML");
+    Automaton M = readAutomatonFromJSON("Resources/AFD.json");
+    
 
     M.printAutomaton();
 
     sf::RenderWindow window(sf::VideoMode(800, 800), "LFA - Automaton");
+
 
     while (window.isOpen())
     {
@@ -195,4 +207,114 @@ void drawAutomaton(Automaton *M, sf::RenderWindow *window)
     }
 
     return;
+}
+
+
+Automaton readAutomatonFromXML(const std::string& filePath) {
+    pugi::xml_document doc;
+    pugi::xml_parse_result result = doc.load_file(filePath.c_str());
+
+    if (!result) {
+        std::cerr << "Erro ao carregar o arquivo XML: " << result.description() << std::endl;
+        exit(1);
+    }
+
+    std::map<std::string, unsigned int> stateUIDs;
+    std::vector<State> states;
+    std::vector<Transition> transitions;
+
+    pugi::xml_node simbolos = doc.child("AFD").child("simbolos");
+    for (pugi::xml_node elemento : simbolos.children("elemento")) {
+        std::string simbolo = elemento.attribute("valor").as_string();
+    }
+
+    //estados
+    pugi::xml_node estados = doc.child("AFD").child("estados");
+    unsigned int uidCounter = 0;
+    for (pugi::xml_node elemento : estados.children("elemento")) {
+        std::string estadoNome = elemento.attribute("valor").as_string();
+        stateUIDs[estadoNome] = uidCounter;
+        states.push_back(State(uidCounter, estadoNome));
+           // State s1 = State(0, "Q1", false, true);
+        uidCounter++;
+    }
+
+    //estado inicial
+    pugi::xml_node estadoInicial = doc.child("AFD").child("estadoInicial");
+    std::string estadoInicialNome = estadoInicial.attribute("valor").as_string();
+    states[stateUIDs[estadoInicialNome]].sIsInitial = true; 
+
+    //estados finais
+    pugi::xml_node estadosFinais = doc.child("AFD").child("estadosFinais");
+    for (pugi::xml_node elemento : estadosFinais.children("elemento")) {
+        std::string estadoFinalNome = elemento.attribute("valor").as_string();
+        states[stateUIDs[estadoFinalNome]].sIsFinal = true;
+    }
+
+    //transições
+    pugi::xml_node funcaoPrograma = doc.child("AFD").child("funcaoPrograma");
+    for (pugi::xml_node elemento : funcaoPrograma.children("elemento")) {
+        std::string origem = elemento.attribute("origem").as_string();
+        std::string destino = elemento.attribute("destino").as_string();
+        std::string simbolo = elemento.attribute("simbolo").as_string();
+        // Transition t3 = Transition(1, 1, 'a');
+        transitions.push_back(Transition(stateUIDs[origem], stateUIDs[destino], simbolo[0]));
+    }
+
+    //autômato
+    Automaton automaton(states, transitions);
+    return automaton;
+}
+
+
+Automaton readAutomatonFromJSON(const std::string& filePath) {
+
+    std::ifstream file(filePath);
+    if (!file.is_open()) {
+        std::cerr << "Erro ao abrir o arquivo JSON." << std::endl;
+        exit(1);
+    }
+
+ 
+    nlohmann::json jsonData;
+    file >> jsonData;
+    file.close();
+
+    std::map<std::string, unsigned int> stateUIDs;
+    std::vector<State> states;
+    std::vector<Transition> transitions;
+
+   
+    for (const auto& simbolo : jsonData["AFD"]["simbolos"]) {
+    }
+
+    //estados
+    unsigned int uidCounter = 0;
+    for (const auto& estadoNome : jsonData["AFD"]["estados"]) {
+        stateUIDs[estadoNome] = uidCounter;
+        states.push_back(State(uidCounter, estadoNome));
+        uidCounter++;
+    }
+
+    //estado inicial
+    std::string estadoInicialNome = jsonData["AFD"]["estadoInicial"];
+    states[stateUIDs[estadoInicialNome]].sIsInitial = true;
+
+    //estados finais
+    for (const auto& estadoFinalNome : jsonData["AFD"]["estadosFinais"]) {
+        states[stateUIDs[estadoFinalNome]].sIsFinal = true;
+    }
+
+    //transições
+    for (const auto& transicao : jsonData["AFD"]["funcaoPrograma"]) {
+        std::string origem = transicao["origem"];
+        std::string destino = transicao["destino"];
+        std::string simbolo = transicao["simbolo"];
+
+        transitions.push_back(Transition(stateUIDs[origem], stateUIDs[destino], simbolo[0]));
+    }
+
+    //autômato
+    Automaton automaton(states, transitions);
+    return automaton;
 }
